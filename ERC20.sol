@@ -119,19 +119,13 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
             _balances[sender] = senderBalance - amount;
         }
         uint256 retTeth;
-        uint256 Rate;
+        uint256 Rate = getRate();
         
-
-
-
+        COYtoSend = amount;
+    
         if (sender == address(this))
             // Means this is an ETH to Tether to COY
-            Rate = getRate();
             COYtoSend = ( amount * 1000 ) / Rate;
-
-        if (sender != address(this))
-            // Means this is transfer of COY to COY
-            COYtoSend = amount;
 
         //Calculate amount to send and fee to add to reserve
         uint256 feeamount = COYtoSend / 1000;
@@ -142,9 +136,7 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
         _balances[recipient] += amtTosend;
 
         //Check if transfer was to redeem COY and if so send USDT
-        // Have to convert COY to going rate!!!
         if (recipient == address(this))
-            Rate = getRate();
             retTeth = ( amount * 1000 ) / Rate;
             USDTtrans(msg.sender, retTeth);
 
