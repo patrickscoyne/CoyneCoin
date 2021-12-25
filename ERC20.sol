@@ -149,7 +149,7 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
     }
 
     function USDTbal() public view returns (uint256) {
-        uint256 TethBal = usdt.balanceOf(address(this)) * 1000;
+        uint256 TethBal = usdt.balanceOf(address(this));
         return TethBal;
     }
 
