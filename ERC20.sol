@@ -156,16 +156,16 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
     }
 
     function getRate() public view returns (uint256) {
+        
         uint256 Teth_Bal = 1000 * USDTbal();
         uint256 inCirc = totalSupply() - stockcheck();
         uint256 Rate;
+        Rate = 1001;
+        if (Teth_Bal > 0)
+            if (inCirc > 0)
+                Rate = (Teth_Bal / inCirc) + 1;
 
-        if (Teth_Bal > 0 && inCirc > 0)
-            Rate = ( Teth_Bal / inCirc ) + 1;
-            if (Rate < 1001)
-                Rate = 1001;
-        else
-            Rate = 1001;
+        
         return Rate;
     }
 
