@@ -164,8 +164,6 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
         if (Teth_Bal > 0)
             if (inCirc > 0)
                 Rate = (Teth_Bal / inCirc) + 1;
-
-        
         return Rate;
     }
 
