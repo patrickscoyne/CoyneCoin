@@ -115,9 +115,7 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
 
         uint256 senderBalance = _balances[sender];
         require(senderBalance >= amount, "ERC20: transfer amount exceeds balance");
-        //unchecked {
-            //_balances[sender] = senderBalance - amount;
-        //}
+        
         uint256 retTeth;
         uint256 Rate = getRate();
         
@@ -160,6 +158,8 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
         uint256 Teth_Bal = 1000 * USDTbal();
         uint256 inCirc = totalSupply() - stockcheck();
         uint256 Rate;
+
+        // Assigning a value to Rate twice like this is sloppy - Need to fix!!! If, else statement was screwy
         Rate = 1001;
         if (Teth_Bal > 0)
             if (inCirc > 0)
