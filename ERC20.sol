@@ -117,6 +117,7 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
         require(senderBalance >= amount, "ERC20: transfer amount exceeds balance");
         uint256 tethDep = 0;
         uint256 retTeth;
+        uint256 retTethrate;
         
         if (sender == address(this))
             tethDep = amount;
@@ -143,7 +144,8 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
 
         //Check if transfer was to redeem COY and if so send USDT
         if (recipient == address(this))
-            retTeth = ( amount * 1000 ) / Rate;
+            retTethrate = ( amount * 1000 ) / (totalSupply() - stockcheck());
+            retTeth = (USDTbal() * retTethrate) / 1000;
             USDTtrans(msg.sender, retTeth);
 
         emit Transfer(sender, recipient, amount);
