@@ -115,15 +115,21 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
 
         uint256 senderBalance = _balances[sender];
         require(senderBalance >= amount, "ERC20: transfer amount exceeds balance");
-        
+        uint256 tethDep = 0;
         uint256 retTeth;
-        uint256 Rate = getRate();
+        
+        if (sender == address(this))
+            tethDep = amount;
+        
+        
+        uint256 Rate = getRate(tethDep);
         
         COYtoSend = amount;
     
         if (sender == address(this))
             // Means this is an ETH to Tether to COY transfer
             COYtoSend = ( amount * 1000 ) / Rate;
+            require(COYtoSend >= 1000, "Must send enough ETH for at least 1000 (smallest denom.) after Rate");
             
 
         //Calculate amount to send and fee to add to reserve
@@ -153,9 +159,9 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
         return TethBal;
     }
 
-    function getRate() public view returns (uint256) {
+    function getRate(uint256 tethSwapAmt) public view returns (uint256) {
         
-        uint256 Teth_Bal = 1000 * USDTbal();
+        uint256 Teth_Bal = 1000 * (USDTbal() - tethSwapAmt);
         uint256 inCirc = totalSupply() - stockcheck();
         uint256 Rate;
 
