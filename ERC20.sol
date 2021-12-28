@@ -112,6 +112,7 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
         uint256 tethDep = 0;
         uint256 retTeth = 0;
         uint256 retTethrate = 0;
+        uint256 totSup = totalSupply();
         
         if (sender == address(this))
             tethDep = amount;
@@ -132,11 +133,12 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
         _balances[sender] = senderBalance - COYtoSend;
         _balances[address(this)] += feeamount;
         _balances[recipient] += amtTosend;
+    
 
         //Check if transfer was to redeem COY and if so send USDT
         if (recipient == address(this))
-            retTethrate = ( amount * totalSupply() ) / (totalSupply() - stockcheck() + amount);
-            retTeth = (USDTbal() * retTethrate) / totalSupply();
+            retTethrate = ( amount * totSup ) / (totSup - stockcheck() + amount);
+            retTeth = (USDTbal() * retTethrate) / totSup;
             USDTtrans(msg.sender, retTeth);
 
         emit Transfer(sender, recipient, amount);
