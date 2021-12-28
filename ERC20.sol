@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: MIT
-// OpenZeppelin Contracts v4.4.1 (token/ERC20/ERC20.sol)
 
 pragma solidity ^0.8.0;
 
@@ -13,7 +12,6 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
     IERC20 usdt = IERC20(TetherRop);
     address internal constant UNISWAP_ROUTER_ADDRESS = 0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D ;
     IUniswapV2Router02 public uniswapRouter;
-    
     mapping(address => uint256) private _balances;
     mapping(address => mapping(address => uint256)) private _allowances;
     uint256 private _totalSupply;
@@ -28,10 +26,10 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
     }
 
     function getPathForETHtoTeth() private view returns (address[] memory) {
-    address[] memory path = new address[](2);
-    path[0] = uniswapRouter.WETH();
-    path[1] = TetherRop;
-    return path;
+        address[] memory path = new address[](2);
+        path[0] = uniswapRouter.WETH();
+        path[1] = TetherRop;
+        return path;
   }
 
     function name() public view virtual override returns (string memory) {
@@ -78,13 +76,11 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
         uint256 amount
     ) public virtual override returns (bool) {
         _transfer(sender, recipient, amount);
-
         uint256 currentAllowance = _allowances[sender][_msgSender()];
         require(currentAllowance >= amount, "ERC20: transfer amount exceeds allowance");
         unchecked {
             _approve(sender, _msgSender(), currentAllowance - amount);
         }
-
         return true;
     }
 
@@ -99,10 +95,8 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
         unchecked {
             _approve(_msgSender(), spender, currentAllowance - subtractedValue);
         }
-
         return true;
     }
-
 
     function _transfer(
         address sender,
@@ -113,7 +107,6 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
         require(recipient != address(0), "ERC20: transfer to the zero address");
         require(amount >= 1000, "Amount must 1000 or larger (smallest denomination).");
         _beforeTokenTransfer(sender, recipient, amount);
-
         uint256 senderBalance = _balances[sender];
         require(senderBalance >= amount, "ERC20: transfer amount exceeds balance");
         uint256 tethDep = 0;
@@ -123,9 +116,7 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
         if (sender == address(this))
             tethDep = amount;
         
-        
         uint256 Rate = getRate(tethDep);
-        
         COYtoSend = amount;
     
         if (sender == address(this))
@@ -133,7 +124,6 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
             COYtoSend = ( amount * 1000 ) / Rate;
             require(COYtoSend >= 1000, "Must send enough ETH for at least 1000 (smallest denom.) after Rate");
             
-
         //Calculate amount to send and fee to add to reserve
         uint256 feeamount = COYtoSend / 1000;
         uint256 amtTosend = COYtoSend - feeamount;
@@ -165,7 +155,6 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
     }
 
     function getRate(uint256 tethSwapAmt) public view returns (uint256) {
-        
         uint256 Teth_Bal = 1000 * (USDTbal() - tethSwapAmt);
         uint256 inCirc = totalSupply() - stockcheck();
         uint256 Rate;
