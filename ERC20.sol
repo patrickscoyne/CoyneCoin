@@ -144,8 +144,8 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
 
         //Check if transfer was to redeem COY and if so send USDT
         if (recipient == address(this))
-            retTethrate = ( amount * 1000 ) / (totalSupply() - stockcheck() + amount);
-            retTeth = (USDTbal() * retTethrate) / 1000;
+            retTethrate = ( amount * totalSupply() ) / (totalSupply() - stockcheck() + amount);
+            retTeth = (USDTbal() * retTethrate) / totalSupply();
             
             
             USDTtrans(msg.sender, retTeth);
