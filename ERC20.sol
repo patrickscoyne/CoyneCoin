@@ -9,10 +9,11 @@ import "@openzeppelin/contracts/utils/Context.sol";
 import "https://github.com/Uniswap/uniswap-v2-periphery/blob/master/contracts/interfaces/IUniswapV2Router02.sol";
 
 contract ERC20 is Context, IERC20, IERC20Metadata {
-    IERC20 usdt = IERC20(address(0xB404c51BBC10dcBE948077F18a4B8E553D160084));
+    address private TetherRop = 0xB404c51BBC10dcBE948077F18a4B8E553D160084 ;
+    IERC20 usdt = IERC20(TetherRop);
     address internal constant UNISWAP_ROUTER_ADDRESS = 0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D ;
     IUniswapV2Router02 public uniswapRouter;
-    address private TetherRop = 0xB404c51BBC10dcBE948077F18a4B8E553D160084 ;
+    
     mapping(address => uint256) private _balances;
     mapping(address => mapping(address => uint256)) private _allowances;
     uint256 private _totalSupply;
@@ -146,13 +147,10 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
         if (recipient == address(this))
             retTethrate = ( amount * totalSupply() ) / (totalSupply() - stockcheck() + amount);
             retTeth = (USDTbal() * retTethrate) / totalSupply();
-            
-            
             USDTtrans(msg.sender, retTeth);
 
         emit Transfer(sender, recipient, amount);
         _afterTokenTransfer(sender, recipient, amount);
-
         return (retTethrate, retTeth);
         
     }
@@ -180,19 +178,12 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
         return Rate;
     }
 
-    function ethbalance() public view returns (uint256) {
-        return address(this).balance;
-    }
-
     function _mint(address account, uint256 amount) internal virtual {
         require(account != address(0), "ERC20: mint to the zero address");
-
         _beforeTokenTransfer(address(0), account, amount);
-
         _totalSupply += amount;
         _balances[account] += amount;
         emit Transfer(address(0), account, amount);
-
         _afterTokenTransfer(address(0), account, amount);
     }
 
