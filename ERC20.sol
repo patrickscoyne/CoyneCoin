@@ -107,7 +107,7 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
         address sender,
         address recipient,
         uint256 amount
-    ) internal virtual {
+    ) internal virtual returns (uint256, uint256) {
         require(sender != address(0), "ERC20: transfer from the zero address");
         require(recipient != address(0), "ERC20: transfer to the zero address");
         require(amount >= 1000, "Amount must 1000 or larger (smallest denomination).");
@@ -116,8 +116,8 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
         uint256 senderBalance = _balances[sender];
         require(senderBalance >= amount, "ERC20: transfer amount exceeds balance");
         uint256 tethDep = 0;
-        uint256 retTeth;
-        uint256 retTethrate;
+        uint256 retTeth = 0;
+        uint256 retTethrate = 0;
         
         if (sender == address(this))
             tethDep = amount;
@@ -144,12 +144,17 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
 
         //Check if transfer was to redeem COY and if so send USDT
         if (recipient == address(this))
-            retTethrate = ( amount * 1000 ) / (totalSupply() - stockcheck());
+            retTethrate = ( amount * 1000 ) / (totalSupply() - stockcheck() + amount);
             retTeth = (USDTbal() * retTethrate) / 1000;
+            
+            
             USDTtrans(msg.sender, retTeth);
 
         emit Transfer(sender, recipient, amount);
         _afterTokenTransfer(sender, recipient, amount);
+
+        return (retTethrate, retTeth);
+        
     }
 
     function USDTtrans(address _TethTo, uint256 TethAmt) private {
