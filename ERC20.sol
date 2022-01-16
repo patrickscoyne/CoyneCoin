@@ -8,9 +8,9 @@ import "@openzeppelin/contracts/utils/Context.sol";
 import "https://github.com/Uniswap/uniswap-v2-periphery/blob/master/contracts/interfaces/IUniswapV2Router02.sol";
 
 contract ERC20 is Context, IERC20, IERC20Metadata {
-    address private TetherRop = 0xB404c51BBC10dcBE948077F18a4B8E553D160084 ;
+    address private TetherRop = 0xc2132D05D31c914a87C6611C10748AEb04B58e8F ;
     IERC20 usdt = IERC20(TetherRop);
-    address internal constant UNISWAP_ROUTER_ADDRESS = 0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D ;
+    address internal constant UNISWAP_ROUTER_ADDRESS = 0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff ;
     IUniswapV2Router02 public uniswapRouter;
     mapping(address => uint256) private _balances;
     mapping(address => mapping(address => uint256)) private _allowances;
@@ -214,12 +214,18 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
     ) internal virtual {}
 
     receive() external payable {
+        deposit();
+    }
+
+    function deposit() public payable  {
         uint256 _ETHin = msg.value;
         // Make sure at least 1000 wei was sent
         require(_ETHin >= 1000, "Must send at least 1000 wei");
-        uint dline = block.timestamp + 15; // using 'now' for convenience, for mainnet pass deadline from frontend!
+        uint dline = block.timestamp + 200; // using 'now' for convenience, for mainnet pass deadline from frontend!
         address[] memory TethPath = new address[](2);
         TethPath = getPathForETHtoTeth();
+
+        
         uint AmtTeth = uniswapRouter.getAmountsOut(_ETHin, TethPath)[1];
         uint[] memory Tethback = uniswapRouter.swapExactETHForTokens{value : msg.value}(AmtTeth, TethPath, address(this), dline);
         require(Tethback[1] > 0, "Swap did not happen as planned");
