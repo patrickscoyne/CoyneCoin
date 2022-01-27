@@ -1,7 +1,6 @@
 import json
 import random
 import time
-import pandas as pd
 from web3 import Web3
 
 endpoint_url = 'http://127.0.0.1:8545'
@@ -109,7 +108,7 @@ def balanceCOY(addressOf):
     bal_COY = contract_coynecoin.functions.balanceOf(addressOf).call()
     return bal_COY
 
-#Loop and pick random accounts to call random functions on the CoyneCoin smart contract 
+#Loop and pick random accounts to call random functions on the CoyneCoin smart contract (times_finish is how many times you'd like to try and call functions)
 times_start = 0
 times_finish = 2000
 file = open('ratedata.txt', 'w+')
