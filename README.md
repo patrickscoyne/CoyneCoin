@@ -4,7 +4,5 @@ CoyneCoin is an ERC20 token on the Polygon network 100% backed by the Tether sta
 - There is a redeem rate that is calculated according to what is in circulation and the amount of Tether backing it. This allows you to always purchase or redeem for the current rate.
 - The nature of CoyneCoin is to increase in value steadily according to the amount transferred. The more transfers, the more it increases. It was designed to not be volatile, steadily increase over time and always allow to be redeemed for a stable currency.
 
-The official website for CoyneCoin is http://coynecoin.com
 
-The address on the Polygon blockchain for the token contract is 0x8b5cFA01e71D5eB774FB3Be00cD6526aDa2AAbB9
 
